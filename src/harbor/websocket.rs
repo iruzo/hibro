@@ -73,13 +73,15 @@ impl Handler for Server {
 }
 
 /// Open a websocket and manage every connection on the given list
-pub fn open(url: &str, port: &str) {
+pub fn open(url: &str, port: &str) -> std::io::Result<()> {
 
     listen(format!("{url}:{port}"), |sender| {
         Server {
             server_sender: sender
         }
     }).unwrap();
+
+    Ok(())
 
 }
 

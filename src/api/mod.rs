@@ -7,9 +7,9 @@ use std::thread;
 /// # Open a websocket server
 ///
 /// ## Arguments
-/// - String - ip: ip used to open the websocket server.
+/// - &String - ip: ip used to open the websocket server.
 ///     - e.g. "0.0.0.0"
-/// - String - port: port to open the websocket server.
+/// - &String - port: port to open the websocket server.
 ///     - e.g. "4444"
 ///
 /// ## Return
@@ -19,10 +19,13 @@ use std::thread;
 /// ```rust
 /// open_websocket("0.0.0.0", "4444")
 /// ```
-pub fn open_websocket(ip: &str, port: &str) {
+pub fn open_websocket(ip: &String, port: &String) {
 
-    thread::spawn(|| {
-        harbor::websocket::open(ip, port);
+    let ip_clone = ip.clone();
+    let port_clone = port.clone();
+
+    thread::spawn(move || {
+        harbor::websocket::open(&ip_clone, &port_clone);
     });
 
 }
@@ -30,9 +33,9 @@ pub fn open_websocket(ip: &str, port: &str) {
 /// # Open a tcp server
 ///
 /// ## Arguments
-/// - &str - ip: ip used to open the tcp server.
+/// - &String - ip: ip used to open the tcp server.
 ///     - e.g. "0.0.0.0"
-/// - &str - port: port to open the tcp server.
+/// - &String - port: port to open the tcp server.
 ///     - e.g. "4444"
 ///
 /// ## Return
@@ -42,10 +45,13 @@ pub fn open_websocket(ip: &str, port: &str) {
 /// ```rust
 /// open_tcp("0.0.0.0", "4444")
 /// ```
-pub fn open_tcp(ip: &str, port: &str) {
+pub fn open_tcp(ip: &String, port: &String) {
 
-    thread::spawn(|| {
-        harbor::tcp::open(ip, port);
+    let ip_clone = ip.clone();
+    let port_clone = port.clone();
+
+    thread::spawn(move || {
+        let _ = harbor::tcp::open(&ip_clone, &port_clone);
     });
 
 }
@@ -53,9 +59,9 @@ pub fn open_tcp(ip: &str, port: &str) {
 /// # Open an udp server
 ///
 /// ## Arguments
-/// - &str - ip: ip used to open the udp server.
+/// - &String - ip: ip used to open the udp server.
 ///     - e.g. "0.0.0.0"
-/// - &str - port: port to open the udp server.
+/// - &String - port: port to open the udp server.
 ///     - e.g. "4444"
 ///
 /// ## Return
@@ -65,10 +71,13 @@ pub fn open_tcp(ip: &str, port: &str) {
 /// ```rust
 /// open_udp("0.0.0.0", "4444")
 /// ```
-pub fn open_udp(ip: &str, port: &str) {
+pub fn open_udp(ip: &String, port: &String) {
 
-    thread::spawn(|| {
-        harbor::udp::open(ip, port);
+    let ip_clone = ip.clone();
+    let port_clone = port.clone();
+
+    thread::spawn(move || {
+        let _ = harbor::udp::open(&ip_clone, &port_clone);
     });
 
 }

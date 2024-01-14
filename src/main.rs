@@ -118,7 +118,7 @@ fn test_websocket() {
 
     // open a web socket
     thread::spawn(|| {
-        harbor::websocket::open("0.0.0.0", "4444");
+        let _ = harbor::websocket::open("0.0.0.0", "4444");
     });
 
     loop {

@@ -1,7 +1,7 @@
 use std::net::UdpSocket;
 use clap::Error;
 
-pub fn open () -> Result<(), Error>{
+pub fn open (url: &str, port: &str) -> Result<(), Error>{
 
     let mut localhost = String::from("127.0.0.1:");
     let port = "8081";

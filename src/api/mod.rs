@@ -1,29 +1,127 @@
-use crate::harbor::websocket;
+use crate::harbor;
 use crate::data;
 use std::path::PathBuf;
 use std::fs;
+use std::thread;
 
-/// send data to a list of connections
+/// # Open a websocket server
+///
+/// ## Arguments
+/// - String - ip: ip used to open the websocket server.
+///     - e.g. "0.0.0.0"
+/// - String - port: port to open the websocket server.
+///     - e.g. "4444"
+///
+/// ## Return
+/// - None
+///
+/// ## Example
+/// ```rust
+/// open_websocket("0.0.0.0", "4444")
+/// ```
+pub fn open_websocket(ip: &str, port: &str) {
+
+    thread::spawn(|| {
+        harbor::websocket::open(ip, port);
+    });
+
+}
+
+/// # Open a tcp server
+///
+/// ## Arguments
+/// - &str - ip: ip used to open the tcp server.
+///     - e.g. "0.0.0.0"
+/// - &str - port: port to open the tcp server.
+///     - e.g. "4444"
+///
+/// ## Return
+/// - None
+///
+/// ## Example
+/// ```rust
+/// open_tcp("0.0.0.0", "4444")
+/// ```
+pub fn open_tcp(ip: &str, port: &str) {
+
+    thread::spawn(|| {
+        harbor::tcp::open(ip, port);
+    });
+
+}
+
+/// # Open an udp server
+///
+/// ## Arguments
+/// - &str - ip: ip used to open the udp server.
+///     - e.g. "0.0.0.0"
+/// - &str - port: port to open the udp server.
+///     - e.g. "4444"
+///
+/// ## Return
+/// - None
+///
+/// ## Example
+/// ```rust
+/// open_udp("0.0.0.0", "4444")
+/// ```
+pub fn open_udp(ip: &str, port: &str) {
+
+    thread::spawn(|| {
+        harbor::udp::open(ip, port);
+    });
+
+}
+
+/// # Send data to a list of connections
+///
+/// ## Arguments
+/// - &Vec<String> - fingerprints: List of fingerprints to send data to.
+/// - &String - message: Message that will be send to those fingerprints.
+///
+/// ## Return
+/// - None
+///
+/// ## Example
+/// ```rust
+/// let mut fingerprints: Vec<String> = Vec::new();
+/// for string in strings.iter() {
+///     fingerprints.push(string);
+/// }
+/// send(&fingerprints, &String::from("Your message"));
+/// ```
 pub fn send(fingerprints: &Vec<String>, message: &String) {
 
     for con in data::mem::CONNECTIONS.lock().unwrap().iter() {
         if fingerprints.contains(&con.fingerprint) {
-            // websocket
             if con.ws_sender.is_some() {
-                websocket::send(con, &message);
+                harbor::websocket::send(con, &message);
             }
         }
     }
 
 }
 
-/// return all connections as JSON
+/// # Return all connections as JSON
+///
+/// ## Arguments
+/// - None
+///
+/// ## Return
+/// - JSON as String
+/// ```
 /// {
 /// "fingerprint": "ip",
 /// "fingerprint": "ip",
 /// "fingerprint": "ip",
 /// ...
 /// }
+/// ```
+///
+/// ## Example
+/// ```rust
+/// connections()
+/// ```
 pub fn connections() -> String {
     let connections = data::mem::CONNECTIONS.as_ref().lock().unwrap();
     let mut json: String = String::from("{");
@@ -46,13 +144,24 @@ pub fn connections() -> String {
     return json
 }
 
-/// return all data_tree from a list of connections
+/// # Return all data_tree from a list of connections
+///
+/// ## Arguments
+/// - &Vec<&data::model::connection::Connection> - connections: Reference to a Vector of
+/// Connections.
+///
+/// ## Return
+/// - JSON as String
+///
+/// ## Example
+/// ```
 /// {
 /// "fingerprint": ["data_file_name1", "data_file_name2", "data_file_name3"],
 /// "fingerprint": ["data_file_name1", "data_file_name2", "data_file_name3"],
 /// "fingerprint": ["data_file_name1", "data_file_name2", "data_file_name3"],
 /// ...
 /// }
+/// ```
 pub fn connections_data_tree(connections: &Vec<&data::model::connection::Connection>) -> String {
     let mut json: String = String::from("{");
 
@@ -82,7 +191,19 @@ pub fn connections_data_tree(connections: &Vec<&data::model::connection::Connect
     return json;
 }
 
-/// return data from specified file
+/// # Return data from specified file
+///
+/// ## Arguments
+/// - &data::model::connection::Connection - con: Reference to connection object.
+/// - &String - file_name: File name.
+///
+/// ## Return
+/// - String
+///
+/// ## Example
+/// ```rust
+/// connection_data_value(connection, &String::from("filename"))
+/// ```
 pub fn connection_data_value(con: &data::model::connection::Connection, file_name: &String) -> std::string::String {
 
     // let mut data_value: std::string::String = path::connections_dir();

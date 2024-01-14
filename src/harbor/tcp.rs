@@ -7,11 +7,10 @@ fn handle(stream: TcpStream){
 
 }
 
-pub fn open() -> std::io::Result<()> {
+pub fn open(url: &str, port: &str) -> std::io::Result<()> {
 
-    let mut localhost = String::from("127.0.0.1:");
-    let port = "8080";
-    localhost.push_str(&port);
+    let mut localhost = String::from(url);
+    localhost.push_str(port);
     let listener = TcpListener::bind(localhost)?;
 
     for stream in listener.incoming() {

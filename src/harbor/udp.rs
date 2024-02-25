@@ -3,8 +3,9 @@ use clap::Error;
 
 pub fn open (url: &str, port: &str) -> Result<(), Error>{
 
-    let mut localhost = String::from("127.0.0.1:");
-    let port = "8081";
+    let mut localhost = String::from(url);
+    let port = port;
+    localhost.push_str(":");
     localhost.push_str(&port);
 
     let socket = UdpSocket::bind(localhost)?;

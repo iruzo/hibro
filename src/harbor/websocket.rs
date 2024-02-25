@@ -34,15 +34,6 @@ impl Handler for Server {
     /// Handle messages that comes from the websocket connection
     fn on_message(&mut self, message: Message) -> Result<()> {
 
-        // let connections = data::mem::CONNECTIONS.lock().unwrap();
-        // for con in connections.iter() {
-        //     if con.ws_sender.clone().unwrap().connection_id() == self.server_sender.connection_id() {
-        //         process_message(connections, con, &message.to_string());
-        //         break;
-        //     }
-        // }
-
-
         let connections = data::mem::CONNECTIONS.lock().unwrap();
         let connections_clone = connections.clone();
         for con in connections_clone.iter() {
